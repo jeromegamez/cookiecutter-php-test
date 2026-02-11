@@ -57,7 +57,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: "8.5"
-          extensions: none, json, openssl, phar
+          extensions: none, iconv, json, mbstring, openssl, phar, tokenizer
           coverage: none
           tools: composer
 
@@ -95,7 +95,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: "8.5"
-          extensions: none, ctype, dom, json, libxml, mbstring, phar, tokenizer, xml, xmlwriter
+          extensions: none, ctype, dom, iconv, json, libxml, mbstring, phar, tokenizer, xml, xmlwriter
           coverage: none
           tools: composer
 
@@ -159,7 +159,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: none, ctype, curl, dom, json, libxml, mbstring, openssl, phar, tokenizer, xml, xmlwriter, pcntl
+          extensions: none, ctype, curl, dom, iconv, json, libxml, mbstring, openssl, phar, tokenizer, xml, xmlwriter, pcntl
           ini-values: ${{ env.PHP_INI_VALUES }}
           coverage: none
           tools: composer
@@ -258,7 +258,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: "8.5"
-          extensions: none, ctype, curl, dom, json, libxml, mbstring, openssl, phar, tokenizer, xml, xmlwriter, pcntl
+          extensions: none, ctype, curl, dom, iconv, json, libxml, mbstring, openssl, phar, tokenizer, xml, xmlwriter, pcntl
           ini-values: ${{ env.PHP_INI_VALUES }}
           coverage: xdebug
           tools: composer

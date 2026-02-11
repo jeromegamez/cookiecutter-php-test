@@ -305,10 +305,14 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Configure Git safe directory for Docker action
+      # Workaround for https://github.com/Nyholm/roave-bc-check-docker/issues/32
+      # and https://github.com/actions/runner/issues/2033.
+      # Remove this step once the upstream Docker action/runner no longer requires
+      # writing safe.directory into $HOME/.gitconfig for container actions.
+      - name: Workaround: Configure Git safe.directory for roave-bc-check Docker action
         run: |
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
-          git config --global --add safe.directory /github/workspace
+          mkdir -p /home/runner/work/_temp/_github_home
+          printf "[safe]\n\tdirectory = /github/workspace\n" > /home/runner/work/_temp/_github_home/.gitconfig
 
       - name: Run Roave BC Check
         uses: docker://nyholm/roave-bc-check-ga

@@ -51,13 +51,13 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: "8.5"
-          extensions: none, iconv, json, mbstring, openssl, phar, tokenizer
+          extensions: none, curl, dom, iconv, json, mbstring, openssl, phar, tokenizer
           coverage: none
           tools: composer
 
@@ -89,13 +89,13 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: "8.5"
-          extensions: none, ctype, dom, iconv, json, libxml, mbstring, phar, tokenizer, xml, xmlwriter
+          extensions: none, ctype, curl, dom, iconv, json, libxml, mbstring, phar, tokenizer, xml, xmlwriter
           coverage: none
           tools: composer
 
@@ -116,20 +116,22 @@ jobs:
         run: composer update --no-interaction --no-progress --ansi
 
       - name: Install PHAR tools with Phive
-        run: composer tools:install
+        run: tools/phive --no-progress install --trust-gpg-keys E82B2FB314E9906E,4AA394086372C20A,C00543248C87FB13,033E5F8D801A2F8D,C5095986493B4AA0
 
       - name: Install PHPStan dependencies
-        run: composer tools:phpstan:install
+        run: composer --working-dir=tools/.phpstan install --no-interaction --no-progress --ansi
 
       - name: Create tool links
-        run: composer tools:link
+        run: |
+          ln -snf phpunit tools/phpunit.phar
+          ln -snf .phpstan/vendor/bin/phpstan tools/phpstan
 
       - name: Setup Problem Matchers
         run: |
           echo "::add-matcher::${{ runner.tool_cache }}/php.json"
 
       - name: Static Analysis
-        run: composer analyze
+        run: tools/phpstan --ansi analyse
 
   unit-tests:
     name: Unit Tests (PHP ${{ matrix.php }}, ${{ matrix.dependencies }})
@@ -153,7 +155,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -186,7 +188,7 @@ jobs:
           fi
 
       - name: Install PHAR tools with Phive
-        run: composer tools:install
+        run: tools/phive --no-progress install --trust-gpg-keys E82B2FB314E9906E,4AA394086372C20A,C00543248C87FB13,033E5F8D801A2F8D,C5095986493B4AA0
 
       - name: Setup Problem Matchers
         run: |
@@ -194,7 +196,7 @@ jobs:
           echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
       - name: Run PHPUnit
-        run: composer test:unit -- --error-format=github
+        run: tools/phpunit --colors=always --testdox
 
   lint:
     name: Lint
@@ -205,13 +207,13 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: "8.5"
-          extensions: none, iconv, json, phar, tokenizer
+          extensions: none, curl, dom, iconv, json, phar, tokenizer
           coverage: none
           tools: composer
 
@@ -232,13 +234,16 @@ jobs:
         run: composer update --no-interaction --no-progress --ansi
 
       - name: Install PHAR tools with Phive
-        run: composer tools:install
+        run: tools/phive --no-progress install --trust-gpg-keys E82B2FB314E9906E,4AA394086372C20A,C00543248C87FB13,033E5F8D801A2F8D,C5095986493B4AA0
 
       - name: Install Rector dependencies
-        run: composer tools:rector:install
+        run: composer --working-dir=tools/.rector install --no-interaction --no-progress --ansi
 
       - name: Run linter suite
-        run: composer lint
+        run: |
+          tools/.rector/vendor/bin/rector --ansi --dry-run
+          tools/php-cs-fixer check --ansi --diff --verbose
+          tools/composer-normalize --ansi --dry-run
 
   code-coverage:
     name: Code Coverage
@@ -252,7 +257,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -280,7 +285,7 @@ jobs:
         run: composer update --no-interaction --no-progress --ansi
 
       - name: Install PHAR tools with Phive
-        run: composer tools:install
+        run: tools/phive --no-progress install --trust-gpg-keys E82B2FB314E9906E,4AA394086372C20A,C00543248C87FB13,033E5F8D801A2F8D,C5095986493B4AA0
 
       - name: Cache PHPUnit static analysis cache
         uses: actions/cache@v5
@@ -323,7 +328,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 

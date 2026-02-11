@@ -84,7 +84,6 @@ The `code-coverage` job in `.github/workflows/ci.yml`:
 - Caches PHPUnit's static analysis cache
 - Warms the coverage cache
 - Collects `build/test-results.xml` and `build/code-coverage.xml`
-- Uploads both files as workflow artifacts
 
 Optional Codecov upload steps are included in `.github/workflows/ci.yml` but commented out.
 To enable Codecov:

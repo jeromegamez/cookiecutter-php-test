@@ -1,0 +1,11 @@
+parameters:
+	level: max
+	bootstrapFiles:
+		- tools/.phpstan/vendor/autoload.php
+
+	paths:
+		- src/
+		- tests/
+
+includes:
+	- tools/.phpstan/vendor/phpstan/phpstan/conf/bleedingEdge.neon

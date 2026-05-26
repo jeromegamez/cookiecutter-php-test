@@ -1,0 +1,9 @@
+{
+    "require-dev": {
+        "phpunit/phpunit": "^13.1.12",
+        "rector/rector": "^2.4.4"
+    },
+    "config": {
+        "sort-packages": true
+    }
+}

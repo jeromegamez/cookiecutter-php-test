@@ -143,6 +143,10 @@ jobs:
         dependencies:
           - "lowest"
           - "highest"
+        include:
+          - php: "8.6"
+            dependencies: "highest"
+            composer-options: "--ignore-platform-req=php+"
 
     steps:
       - name: Checkout code
@@ -173,9 +177,9 @@ jobs:
       - name: Install dependencies with Composer
         run: |
           if [ "${{ matrix.dependencies }}" = "lowest" ]; then
-            composer update --prefer-lowest --prefer-stable --no-interaction --no-progress --ansi
+            composer update --prefer-lowest --prefer-stable --no-interaction --no-progress --ansi ${{ matrix.composer-options }}
           else
-            composer update --no-interaction --no-progress --ansi
+            composer update --no-interaction --no-progress --ansi ${{ matrix.composer-options }}
           fi
       - name: Setup Problem Matchers
         run: |
@@ -402,4 +406,3 @@ jobs:
       - name: Skip Roave BC Check (no tags found)
         if: ${{ steps.check-tags.outputs.has_tags != 'true' }}
         run: echo "Skipping BC check because no git tags were found."
-

@@ -19,3 +19,4 @@ composer require jeromegamez/my-library
 ## Contributing
 
 For local development, tooling, and CI details, see [.github/CONTRIBUTING.md](.github/CONTRIBUTING.md).
+
